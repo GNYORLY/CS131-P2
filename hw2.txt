@@ -1,0 +1,43 @@
+1) convert_grammar
+
+This function is supposed to accept a list of grammars in the style from hw1 
+and return grammars in the style of hw2. What I initially was confused about 
+was how to return a function as part of a pair in an output but it was actually 
+quite straightforward. 
+The function works by matching each nonterminal to the lhs of each pair in 
+the grammar list and appending the rhs to the list corresponding to its 
+nonterminal.
+
+2) parse_prefix
+
+For this function, I needed a way to recursively check through each rule 
+and each element within in a rule for matches. This resulted in the function 
+having three main parts:
+
+matcher checks if rules corresponding to the given nonterminal exist. If no, 
+return None. If yes, call match_sym with the first rule corresponding to the 
+given nonterminal while adding that rule and nonterminal to the derivation list. 
+If None is returned, call matcher with the tail of the rule list to check for the 
+next rule. If some result is returned, return that result as the final output. 
+This function goes through each rules that correspond to the nonterminal it 
+is given and tries to find a match by passing the rules through match_sym. It 
+will stop and return the first valid prefix derivation it gets.
+
+match_sym checks if the given rule contains any elements. If no, call the 
+acceptor on the current derivation and fragment. If yes, check if the first 
+element of the rule is terminal or nonterminal. If nonterminal, call matcher 
+with that nonterminal symbol as the input. If terminal, check if the fragment 
+list has any elements. If no, return None. If yes,  check if the first fragment 
+and rule element match. If no, return None. If yes, call match_sym with the 
+tail of the rule element list and tail of the fragment list to check if the next 
+ones match. 
+This function basically just tries to match each elements within a rule to each 
+fragment in order.
+
+parse_prefix calls matcher with the beginning nonterminal symbol, the 
+rules corresponding to that nonterminal, the entire list of rules, an acceptor 
+function, an empty list for derivations, and the fragment. matcher will then 
+run until an acceptable derivation for the fragment is found or no more prefix 
+matches are possible. 
+This function really just calls the matcher function with the correct starting 
+values and inputs.
